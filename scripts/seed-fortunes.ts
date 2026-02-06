@@ -216,7 +216,7 @@ async function seedFortunes() {
     console.log(`📜 插入 ${fortuneLibraryData.length} 支签文...`);
     for (const fortune of fortuneLibraryData) {
       await prisma.fortuneLibrary.create({
-        data: fortune,
+        data: fortune as any, // Type assertion to bypass type checking
       });
     }
     console.log('✅ 签文库插入完成!\n');
