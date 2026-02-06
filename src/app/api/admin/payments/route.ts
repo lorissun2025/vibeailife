@@ -19,7 +19,7 @@ export async function GET(req: NextRequest) {
     // 构建筛选条件
     const where = status !== 'ALL'
       ? {
-          status: status,
+          status: status as any,
         }
       : {}
 
