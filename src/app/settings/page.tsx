@@ -206,7 +206,7 @@ export default function SettingsPage() {
           <div className="mt-8 flex justify-end gap-3">
             <Button
               variant="outline"
-              onClick={() => setSelectedProvider(settings?.preferredProvider || 'auto')}
+              onClick={() => setSelectedProvider((settings?.preferredProvider || 'auto') as any)}
               disabled={isSaving}
               className="rounded-2xl border-2 font-quicksand font-bold px-6"
             >
