@@ -58,6 +58,7 @@ export async function POST(req: NextRequest) {
     // Stripe 集成
     let stripe;
     try {
+      // @ts-expect-error - stripe is optional for payment functionality
       const stripeModule = await import('stripe');
       stripe = new stripeModule.default(process.env.STRIPE_SECRET_KEY);
     } catch (error) {

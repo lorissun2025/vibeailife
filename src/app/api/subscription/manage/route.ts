@@ -42,6 +42,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
+    // @ts-expect-error - stripe is optional for payment functionality
     const stripeModule = await import('stripe');
     const stripe = new stripeModule.default(process.env.STRIPE_SECRET_KEY);
 
