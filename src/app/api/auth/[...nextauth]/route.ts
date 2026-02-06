@@ -36,12 +36,12 @@ if (process.env.NODE_ENV === 'development') {
                 provider: 'email',
                 tier: 'FREE',
                 hasOnboarded: true,
-                region: 'international',
+                region: 'international' as const,
               },
             })
           }
 
-          return user
+          return user as any
         }
 
         return null
