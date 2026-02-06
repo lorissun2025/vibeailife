@@ -40,13 +40,13 @@ export async function getTodayFortune(userId: string): Promise<FortuneContext | 
   }
 
   return {
-    fortuneId: dailyFortune.fortune.id,
-    title: dailyFortune.fortune.title,
-    text: dailyFortune.fortune.text,
-    interpretation: dailyFortune.fortune.interpretation,
-    applicableScenarios: dailyFortune.fortune.applicableScenarios,
-    aiHints: dailyFortune.fortune.aiHints,
-    tone: dailyFortune.fortune.tone,
+    fortuneId: dailyFortune.fortune!.id,
+    title: dailyFortune.fortune!.title,
+    text: dailyFortune.fortune!.text,
+    interpretation: dailyFortune.fortune!.interpretation,
+    applicableScenarios: dailyFortune.fortune!.applicableScenarios,
+    aiHints: dailyFortune.fortune!.aiHints,
+    tone: dailyFortune.fortune!.tone,
   };
 }
 
