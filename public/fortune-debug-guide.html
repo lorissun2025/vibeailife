@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>签文代入调试指南</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .section {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            border-left: 4px solid #FF6B6B;
+        }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 13px;
+        }
+        .step {
+            background: white;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 5px;
+            border: 1px solid #e0e0e0;
+        }
+        .success {
+            color: #22c55e;
+            font-weight: bold;
+        }
+        .error {
+            color: #ef4444;
+            font-weight: bold;
+        }
+        .warning {
+            color: #f59e0b;
+            font-weight: bold;
+        }
+        h1 { color: #FF6B6B; }
+        h2 { color: #333; border-bottom: 2px solid #FF6B6B; padding-bottom: 10px; }
+        button {
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #ee5a5a; }
+        #output {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 5px;
+            margin-top: 15px;
+            font-family: monospace;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>🔍 签文代入调试指南</h1>
+
+    <div class="section">
+        <h2>问题：签文没有代入到 AI 对话中</h2>
+        <p>这个页面帮助你诊断签文代入功能为什么没有工作。</p>
+    </div>
+
+    <div class="step">
+        <h3>步骤 1: 检查今日签文</h3>
+        <p>点击下面的按钮检查你今天是否已经抽签：</p>
+        <button onclick="checkFortune()">📜 检查今日签文</button>
+        <div id="fortuneOutput"></div>
+    </div>
+
+    <div class="step">
+        <h3>步骤 2: 检查服务器日志</h3>
+        <p>打开终端，运行开发服务器的地方，应该看到类似这样的日志：</p>
+        <div class="code">
+============================================================
+📜 今日签文: 流水不争先 - 流水不争先，争的是滔滔不绝
+💬 用户消息内容: 早上好，今天心情怎么样？
+💬 是否首条消息: true
+📊 对话历史消息数: 1
+🚫 签文次数限制: 未达上限
+✅ 签文强制代入（首次对话）
+🎯 是否代入签文: true 原因: 首次对话强制代入
+✨ 签文系统提示词已生成，长度: XXX
+📝 签文提示词内容: 今日签文是"流水不争先"...
+============================================================
+        </div>
+        <p class="warning">⚠️ 如果服务器控制台没有看到这些日志，说明请求没有到达服务器。</p>
+    </div>
+
+    <div class="step">
+        <h3>步骤 3: 测试签文代入</h3>
+        <p>清除签文记录后重新测试：</p>
+        <button onclick="clearFortune()">🗑️ 清除今日签文</button>
+        <button onclick="window.location.href='/dashboard')">🏠 返回首页重新抽签</button>
+        <div id="clearOutput"></div>
+    </div>
+
+    <div class="step">
+        <h3>步骤 4: 手动触发签文代入</h3>
+        <p>如果自动代入不工作，可以手动发送测试消息：</p>
+        <div class="code">
+在聊天输入框输入以下任意一条消息：
+• "你好"
+• "早上好"
+• "今天感觉很焦虑"
+• "工作压力太大了"
+• "遇到了一些困难"
+        </div>
+        <p class="success">✅ 这些消息包含关键词，应该会触发签文代入</p>
+    </div>
+
+    <div class="step">
+        <h3>步骤 5: 检查浏览器控制台</h3>
+        <p>打开浏览器开发者工具（按 F12），切换到 Console 标签：</p>
+        <ul>
+            <li>检查是否有 JavaScript 错误</li>
+            <li>检查网络请求是否成功（Network 标签）</li>
+            <li>查看 /api/chat/conversations/[id]/messages 请求的响应</li>
+        </ul>
+    </div>
+
+    <div class="section">
+        <h2>常见问题</h2>
+        <dl>
+            <dt><b>Q: 为什么有时签文会代入，有时不会？</b></dt>
+            <dd>A: 签文代入有 70% 的随机概率（首条消息除外）。如果不包含关键词，有 30% 的概率不会代入。</dd>
+
+            <dt><b>Q: 签文代入次数有限制吗？</b></dt>
+            <dd>A: 是的，每天最多代入 5 次。达到上限后就不会再代入了。</dd>
+
+            <dt><b>Q: 首条消息一定会代入签文吗？</b></dt>
+            <dd>A: 是的，如果是新对话的第一条消息，会 100% 强制代入签文（前提是未达到次数上限）。</dd>
+
+            <dt><b>Q: 如何确认签文已代入？</b></dt>
+            <dd>A: AI 的回复中会自然地提及签文内容或含义，不会生硬地说"这是你的签文"。</dd>
+        </dl>
+    </div>
+
+    <script>
+        async function checkFortune() {
+            const output = document.getElementById('fortuneOutput');
+            output.innerHTML = '<p style="color: blue;">正在检查...</p>';
+
+            try {
+                const response = await fetch('/api/fortune/today');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    const fortune = data.data;
+                    output.innerHTML = `
+                        <p class="success">✅ 已找到今日签文</p>
+                        <div class="code">
+<strong>标题：</strong>${fortune.title}
+<strong>内容：</strong>${fortune.text}
+<strong>解读：</strong>${fortune.interpretation}
+<strong>适用场景：</strong>${fortune.applicableScenarios.join(', ')}
+<strong>已代入次数：</strong>${fortune.appliedCount || 0}/5
+                        </div>
+                        <p class="success">✅ 签文数据正常，可以继续测试</p>
+                    `;
+                } else {
+                    output.innerHTML = `
+                        <p class="warning">⚠️ 今日还没有抽签</p>
+                        <p>请先完成抽签流程，然后再测试签文代入功能。</p>
+                    `;
+                }
+            } catch (error) {
+                output.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        async function clearFortune() {
+            const output = document.getElementById('clearOutput');
+            output.innerHTML = '<p style="color: blue;">正在清除...</p>';
+
+            try {
+                const response = await fetch('/api/fortune/clear', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    output.innerHTML = `
+                        <p class="success">✅ ${data.message}</p>
+                        <p>已删除 ${data.deleted} 条记录</p>
+                        <p>请点击"返回首页重新抽签"按钮继续测试</p>
+                    `;
+                } else {
+                    output.innerHTML = `<p class="error">❌ 失败: ${JSON.stringify(data)}</p>`;
+                }
+            } catch (error) {
+                output.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        // 页面加载时自动检查签文
+        window.addEventListener('load', () => {
+            setTimeout(checkFortune, 500);
+        });
+    </script>
+</body>
+</html>

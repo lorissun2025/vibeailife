@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeAILife - Gradient Modern</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            --gradient-4: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+            --glass-bg: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-primary: #ffffff;
+            --text-secondary: rgba(255, 255, 255, 0.7);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0f0f1e;
+            color: var(--text-primary);
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        /* Animated gradient background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background:
+                radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.15), transparent 50%),
+                radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.15), transparent 50%),
+                radial-gradient(circle at 40% 20%, rgba(79, 172, 254, 0.1), transparent 50%);
+            animation: gradientShift 15s ease infinite;
+            z-index: 0;
+        }
+
+        @keyframes gradientShift {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.6; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 20px 30px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+        }
+
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        nav a:hover {
+            color: var(--text-primary);
+        }
+
+        nav a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--gradient-1);
+            transition: width 0.3s ease;
+        }
+
+        nav a:hover::after {
+            width: 100%;
+        }
+
+        /* Welcome */
+        .welcome {
+            margin-bottom: 50px;
+            animation: slideUp 0.8s ease;
+        }
+
+        .welcome h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, rgba(255,255,255,0.7) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .welcome p {
+            color: var(--text-secondary);
+            font-size: 16px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+        }
+
+        /* Glass Card */
+        .card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 24px;
+            padding: 35px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-5px) scale(1.02);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .card-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .card-title .icon {
+            font-size: 20px;
+        }
+
+        /* Fortune Card */
+        .fortune-card {
+            grid-column: span 5;
+            animation: slideUp 0.8s ease 0.1s both;
+        }
+
+        .fortune-card::before {
+            background: var(--gradient-2);
+        }
+
+        .fortune-display {
+            text-align: center;
+            padding: 30px 0;
+        }
+
+        .fortune-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            background: var(--gradient-2);
+            border-radius: 30px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 20px;
+        }
+
+        .fortune-title {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff 0%, #f093fb 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .fortune-text {
+            font-size: 16px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 25px;
+        }
+
+        .fortune-interpretation {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.6);
+            line-height: 1.7;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-fortune {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 14px 35px;
+            background: var(--gradient-2);
+            color: white;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            border-radius: 12px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-fortune:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(240, 147, 251, 0.4);
+        }
+
+        /* Vibe Tracker */
+        .vibe-card {
+            grid-column: span 7;
+            animation: slideUp 0.8s ease 0.2s both;
+        }
+
+        .vibe-card::before {
+            background: var(--gradient-3);
+        }
+
+        .mood-section {
+            margin-bottom: 25px;
+        }
+
+        .mood-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 10px;
+        }
+
+        .mood-btn {
+            width: 45px;
+            height: 45px;
+            border: 2px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.05);
+            font-size: 18px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+        }
+
+        .mood-btn:hover {
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.1);
+        }
+
+        .mood-btn.active {
+            background: var(--gradient-3);
+            border-color: transparent;
+            transform: scale(1.1);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 25px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 20px;
+        }
+
+        .tag:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .tag.active {
+            background: var(--gradient-1);
+            border-color: transparent;
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            color: var(--text-primary);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .note-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .note-input::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        /* Quick Actions */
+        .actions-card {
+            grid-column: span 12;
+            animation: slideUp 0.8s ease 0.3s both;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+
+        .action-item {
+            text-align: center;
+            padding: 25px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .action-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--gradient-1);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .action-item:hover::before {
+            opacity: 0.2;
+        }
+
+        .action-item:hover {
+            transform: translateY(-3px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        .action-icon {
+            font-size: 28px;
+            margin-bottom: 10px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .action-label {
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Goal Card */
+        .goal-card {
+            grid-column: span 4;
+            animation: slideUp 0.8s ease 0.4s both;
+        }
+
+        .goal-card::before {
+            background: var(--gradient-4);
+        }
+
+        .goal-item {
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .goal-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .goal-title {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 12px;
+        }
+
+        .goal-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 3px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--gradient-4);
+            border-radius: 3px;
+            transition: width 0.6s ease;
+        }
+
+        .progress-text {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        /* Recommendation Card */
+        .rec-card {
+            grid-column: span 8;
+            animation: slideUp 0.8s ease 0.5s both;
+        }
+
+        .rec-card::before {
+            background: var(--gradient-1);
+        }
+
+        .rec-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            transition: all 0.3s ease;
+        }
+
+        .rec-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .rec-icon {
+            width: 45px;
+            height: 45px;
+            background: var(--gradient-1);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .rec-content h4 {
+            font-size: 15px;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .rec-content p {
+            font-size: 13px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .fortune-card { grid-column: span 6; }
+            .vibe-card { grid-column: span 6; }
+            .goal-card { grid-column: span 3; }
+            .rec-card { grid-column: span 6; }
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            .welcome h1 {
+                font-size: 32px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .fortune-card,
+            .vibe-card,
+            .goal-card,
+            .rec-card,
+            .actions-card {
+                grid-column: span 1;
+            }
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 20px;
+            }
+        }
+
+        /* Style Badge */
+        .style-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--gradient-1);
+            color: white;
+            padding: 12px 24px;
+            font-size: 10px;
+            font-weight: 700;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            border-radius: 30px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Floating orbs */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.3;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--gradient-1);
+            top: -100px;
+            right: -100px;
+            animation: float 20s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--gradient-2);
+            bottom: -50px;
+            left: -50px;
+            animation: float 15s ease-in-out infinite reverse;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+    </style>
+</head>
+<body>
+    <div class="orb orb-1"></div>
+    <div class="orb orb-2"></div>
+
+    <div class="container">
+        <header>
+            <div class="logo">✦ VibeAILife</div>
+            <nav>
+                <a href="#">Dashboard</a>
+                <a href="#">Chat</a>
+                <a href="#">Vibe</a>
+                <a href="#">Goals</a>
+                <a href="#">Settings</a>
+            </nav>
+        </header>
+
+        <div class="welcome">
+            <h1>今天过得怎么样？</h1>
+            <p>记录每一刻，发现更好的自己</p>
+        </div>
+
+        <div class="grid">
+            <!-- Fortune Card -->
+            <div class="card fortune-card">
+                <div class="card-title">
+                    <span class="icon">🎴</span>
+                    今日签文
+                </div>
+                <div class="fortune-display">
+                    <div class="fortune-badge">上上签</div>
+                    <div class="fortune-title">流水不争先</div>
+                    <div class="fortune-text">流水不争先，争的是滔滔不绝</div>
+                    <div class="fortune-interpretation">
+                        持续比速度更重要，坚持比爆发更可贵。不要急于一时的成就，保持稳定的前进姿态，你终将到达想去的地方。
+                    </div>
+                </div>
+                <button class="btn-fortune">✦ 重新抽签</button>
+            </div>
+
+            <!-- Vibe Tracker -->
+            <div class="card vibe-card">
+                <div class="card-title">
+                    <span class="icon">✨</span>
+                    记录 Vibe
+                </div>
+                <div class="mood-section">
+                    <div class="mood-label">心情</div>
+                    <div class="mood-selector">
+                        <button class="mood-btn">😔</button>
+                        <button class="mood-btn">😐</button>
+                        <button class="mood-btn active">😊</button>
+                        <button class="mood-btn">😄</button>
+                        <button class="mood-btn">🥰</button>
+                    </div>
+                </div>
+                <div class="mood-section">
+                    <div class="mood-label">精力</div>
+                    <div class="mood-selector">
+                        <button class="mood-btn">💫</button>
+                        <button class="mood-btn">✨</button>
+                        <button class="mood-btn active">⚡</button>
+                        <button class="mood-btn">🔥</button>
+                        <button class="mood-btn">🚀</button>
+                    </div>
+                </div>
+                <div class="tags">
+                    <span class="tag">工作</span>
+                    <span class="tag active">学习</span>
+                    <span class="tag">运动</span>
+                    <span class="tag">休息</span>
+                    <span class="tag">社交</span>
+                    <span class="tag">创造</span>
+                </div>
+                <input type="text" class="note-input" placeholder="写下当下的想法...">
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card actions-card">
+                <div class="actions-grid">
+                    <div class="action-item">
+                        <div class="action-icon">💬</div>
+                        <div class="action-label">开始对话</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎴</div>
+                        <div class="action-label">每日签文</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">📊</div>
+                        <div class="action-label">记录 Vibe</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎯</div>
+                        <div class="action-label">我的目标</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="card goal-card">
+                <div class="card-title">
+                    <span class="icon">🎯</span>
+                    目标进度
+                </div>
+                <div class="goal-item">
+                    <div class="goal-title">每天运动30分钟</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <span class="progress-text">60%</span>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-title">阅读12本书</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <span class="progress-text">33%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="card rec-card">
+                <div class="card-title">
+                    <span class="icon">💡</span>
+                    为你推荐
+                </div>
+                <div class="rec-item">
+                    <div class="rec-icon">🌱</div>
+                    <div class="rec-content">
+                        <h4>心情低落时的活动建议</h4>
+                        <p>试试这些活动：听喜欢的音乐、散步10分钟、和朋友聊天、或者写日记。记住，不好也没关系。</p>
+                    </div>
+                </div>
+                <div class="rec-item">
+                    <div class="rec-icon">💭</div>
+                    <div class="rec-content">
+                        <h4>恢复精力的冥想练习</h4>
+                        <p>尝试5分钟的深呼吸冥想，或者短暂的小睡。恢复精力是提升效率的关键。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="style-badge">Gradient Modern</div>
+
+    <script>
+        // Mood selector interaction
+        document.querySelectorAll('.mood-selector').forEach((selector) => {
+            selector.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selector.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+
+        // Tag interaction
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('active');
+            });
+        });
+
+        // Action items click effect
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Fortune button effect
+        document.querySelector('.btn-fortune')?.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+    </script>
+</body>
+</html>

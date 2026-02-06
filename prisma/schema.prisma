@@ -1,0 +1,355 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ========================================
+// 用户与认证相关表
+// ========================================
+
+model User {
+  id               String    @id @default(cuid())
+  email            String?   @unique
+  name             String?
+  avatar           String?
+  provider         String    @default("email") // google, wechat, email
+  providerId       String?   @unique // Google ID / WeChat OpenID
+  wechatOpenid     String?   @unique // 微信 OpenID (备用)
+  wechatUnionid    String?   @unique // 微信 UnionID (跨应用)
+  region           String    @default("international") // cn, international
+  tier             Tier      @default(FREE)
+  preferredProvider String?  @default("zhipu") // zhipu, openai, null (auto)
+  hasOnboarded     Boolean   @default(false)
+  isBanned         Boolean   @default(false)
+  lastActiveAt     DateTime  @default(now())
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  // 关系
+  vibeRecords   VibeRecord[]
+  conversations Conversation[]
+  goals         Goal[]
+  subscription  Subscription?
+  payments      Payment[]
+  usageLimits   UsageLimit[]
+  accounts      Account[]
+  sessions      Session[]
+  dailyFortunes DailyFortune[]
+
+  @@index([email])
+  @@index([provider, providerId])
+  @@index([region])
+}
+
+enum Tier {
+  FREE
+  PRO
+  ENTERPRISE
+}
+
+// NextAuth.js required models
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ========================================
+// Vibe 追踪相关表
+// ========================================
+
+model VibeRecord {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mood       Int      // 1-5 星级
+  energy     Int      // 1-5 星级
+  tags       String[] // ["工作", "学习", "运动"]
+  note       String?  // 用户备注
+  aiResponse String?  // AI 分析结果
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+}
+
+// ========================================
+// 对话相关表
+// ========================================
+
+model Conversation {
+  id           String       @id @default(cuid())
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  mode         ChatMode     @default(FRIEND)
+  title        String?
+  messageCount Int          @default(0)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  messages     Message[]
+
+  @@index([userId, updatedAt(sort: Desc)])
+}
+
+enum ChatMode {
+  FRIEND    // 朋友模式
+  COACH     // 教练模式
+  LISTENER  // 倾听者模式
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           MessageRole
+  content        String       @db.Text
+  tokens         Int?
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId, createdAt(sort: Asc)])
+}
+
+enum MessageRole {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// ========================================
+// 每日签文相关表
+// ========================================
+
+// 签文库 - 存储所有可抽取的签文
+model FortuneLibrary {
+  id              String   @id @default(cuid())
+  type            FortuneType
+  level           FortuneLevel
+  title           String
+  text            String   @db.Text
+  interpretation  String   @db.Text
+  tone            FortuneTone
+  applicableScenarios String[] // 适用场景标签
+  aiHints         String[] // AI 提示信息
+  createdAt       DateTime @default(now())
+
+  dailyFortunes   DailyFortune[]
+
+  @@index([type, level])
+}
+
+enum FortuneType {
+  GROWTH        // 心灵成长
+  CAREER        // 事业运势
+  RELATIONSHIP  // 人际关系
+  GENERAL       // 随机通用
+}
+
+enum FortuneLevel {
+  EXCELLENT     // 上上签
+  GOOD          // 上签
+  MEDIUM        // 中签
+  CHALLENGING   // 下签
+}
+
+enum FortuneTone {
+  ENCOURAGING   // 鼓励
+  REFLECTIVE    // 反思
+  CALMING       // 平静
+  INSPIRING     // 启发
+  WARM          // 温暖
+}
+
+// 用户每日抽签记录
+model DailyFortune {
+  id              String         @id @default(cuid())
+  userId          String
+  user            User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  fortuneId       String?
+  fortune         FortuneLibrary? @relation(fields: [fortuneId], references: [id])
+  drawDate        DateTime       @unique @db.Date // 抽签日期
+  appliedCount    Int            @default(0) // AI 代入次数
+  skipped         Boolean        @default(false) // 是否跳过
+  createdAt       DateTime       @default(now())
+
+  @@unique([userId, drawDate])
+  @@index([userId, drawDate(sort: Desc)])
+}
+
+// ========================================
+// 目标管理相关表
+// ========================================
+
+model Goal {
+  id          String      @id @default(cuid())
+  userId      String
+  user        User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+  title       String
+  description String?     @db.Text
+  status      GoalStatus  @default(ACTIVE)
+  deadline    DateTime?
+  progress    Int         @default(0) // 0-100
+  createdAt   DateTime    @default(now())
+  updatedAt   DateTime    @updatedAt
+
+  checkins    GoalCheckin[]
+
+  @@index([userId, status])
+}
+
+model GoalCheckin {
+  id        String   @id @default(cuid())
+  goalId    String
+  goal      Goal     @relation(fields: [goalId], references: [id], onDelete: Cascade)
+  note      String?
+  createdAt DateTime @default(now())
+
+  @@index([goalId, createdAt(sort: Desc)])
+}
+
+enum GoalStatus {
+  ACTIVE
+  COMPLETED
+  PAUSED
+  CANCELLED
+}
+
+// ========================================
+// 订阅与支付相关表
+// ========================================
+
+model Subscription {
+  id                String            @id @default(cuid())
+  userId            String            @unique
+  user              User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  status            SubscriptionStatus @default(ACTIVE)
+  plan              Plan              @default(PRO)
+  currentPeriodStart DateTime          @default(now())
+  currentPeriodEnd   DateTime
+  cancelAtPeriodEnd Boolean           @default(false)
+  stripeSubscriptionId String?          @unique
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  payments          Payment[]
+
+  @@index([status])
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  CANCELLED
+  PAST_DUE
+  TRIALING
+}
+
+enum Plan {
+  PRO
+  ENTERPRISE
+}
+
+model Payment {
+  id               String          @id @default(cuid())
+  userId           String
+  user             User            @relation(fields: [userId], references: [id], onDelete: Cascade)
+  subscriptionId   String?
+  subscription     Subscription?   @relation(fields: [subscriptionId], references: [id])
+  amount           Int             // 单位: 分
+  currency         String          @default("USD") // USD, CNY
+  provider         PaymentProvider @default(STRIPE) // STRIPE, ALIPAY, WECHAT
+  status           PaymentStatus   @default(PENDING)
+  stripePaymentId  String?         @unique // Stripe Payment ID
+  alipayOrderId    String?         @unique // 支付宝订单 ID
+  wechatTransactionId String?      @unique // 微信交易 ID
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([status])
+  @@index([provider])
+}
+
+enum PaymentStatus {
+  PENDING
+  SUCCEEDED
+  FAILED
+  REFUNDED
+}
+
+enum PaymentProvider {
+  STRIPE     // 国际用户
+  ALIPAY     // 国内用户
+  WECHAT     // 国内用户
+}
+
+// ========================================
+// 使用限制表
+// ========================================
+
+model UsageLimit {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  period      String   // "2026-01" (按月)
+  messageCount Int     @default(0)
+  vibeCount    Int     @default(0)
+  goalCount    Int     @default(0)
+  tokensUsed   Int     @default(0)
+  resetAt     DateTime
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, period])
+  @@index([userId, period])
+}
+
+// ========================================
+// 分析事件表
+// ========================================
+
+model AnalyticsEvent {
+  id        String   @id @default(cuid())
+  userId    String?
+  sessionId String?
+  event     String   // "page_view", "chat_message", "vibe_record"
+  properties Json?    // 灵活存储事件属性
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt(sort: Desc)])
+  @@index([event, createdAt(sort: Desc)])
+}

@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeAILife Dashboard - 方案对比</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #FF6B6B;
+            --primary-light: #FF8A8A;
+            --secondary: #95D5B2;
+            --accent: #FFD93D;
+            --background: #FDF8F6;
+            --border: #E8E0D8;
+            --foreground: #2D3436;
+            --muted: #636E72;
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.08);
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--background);
+            color: var(--foreground);
+        }
+
+        .font-quicksand {
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        /* Switcher */
+        .switcher {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2D3436, #636E72);
+            padding: 12px 24px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .switcher-label {
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .switcher-buttons {
+            display: flex;
+            gap: 8px;
+        }
+
+        .switcher-btn {
+            padding: 8px 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .switcher-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .switcher-btn.active {
+            background: var(--primary);
+            border-color: var(--primary);
+            box-shadow: 0 4px 12px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Main wrapper */
+        .main-wrapper {
+            padding-top: 60px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+            padding-bottom: 120px;
+        }
+
+        /* Header */
+        .header {
+            background: white;
+            border-bottom: 2px solid var(--border);
+            padding: 16px 24px;
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--muted);
+            font-weight: 600;
+            transition: color 0.2s;
+            padding: 8px 16px;
+            border-radius: 16px;
+        }
+
+        .nav-link:hover {
+            color: var(--primary);
+            background: rgba(255, 107, 107, 0.1);
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+        }
+
+        /* Content */
+        .section-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .vibe-report-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 48px;
+        }
+
+        .vibe-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+        }
+
+        .vibe-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .vibe-card.success {
+            background: linear-gradient(135deg, rgba(149, 213, 178, 0.15), rgba(149, 213, 178, 0.05));
+            border-color: var(--secondary);
+        }
+
+        .vibe-card.warning {
+            background: linear-gradient(135deg, rgba(255, 217, 61, 0.15), rgba(255, 217, 61, 0.05));
+            border-color: var(--accent);
+        }
+
+        .vibe-card.insight {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.15), rgba(255, 107, 107, 0.05));
+            border-color: var(--primary);
+        }
+
+        .vibe-card-icon {
+            font-size: 32px;
+            margin-bottom: 16px;
+        }
+
+        .vibe-card-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .vibe-card-content {
+            color: var(--muted);
+            font-size: 15px;
+        }
+
+        .vibe-card-content li {
+            margin-bottom: 10px;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .goal-card {
+            background: white;
+            border-radius: 24px;
+            padding: 28px;
+            border: 2px solid var(--border);
+            box-shadow: var(--shadow);
+        }
+
+        .goal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .goal-icon {
+            font-size: 32px;
+        }
+
+        .goal-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            flex: 1;
+        }
+
+        .progress-bar {
+            background: #F0F0F0;
+            height: 12px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 10px;
+        }
+
+        .progress-fill.primary {
+            background: linear-gradient(90deg, var(--primary), var(--primary-light));
+        }
+
+        .progress-fill.secondary {
+            background: linear-gradient(90deg, var(--secondary), #B8E5C9);
+        }
+
+        .progress-text {
+            display: flex;
+            justify-content: space-between;
+            font-size: 14px;
+            color: var(--muted);
+            margin-bottom: 16px;
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 16px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 16px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Bottom Bar Variations */
+        .bottom-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 2px solid var(--border);
+            padding: 20px 24px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+            z-index: 99;
+        }
+
+        .action-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 16px 32px;
+            border-radius: 20px;
+            border: none;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Quicksand', sans-serif;
+        }
+
+        .action-btn.primary {
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            box-shadow: var(--shadow);
+        }
+
+        .action-btn.primary:hover {
+            transform: scale(1.05);
+        }
+
+        .action-btn.secondary {
+            background: white;
+            color: var(--foreground);
+            border: 2px solid var(--border);
+        }
+
+        .action-btn.secondary:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* FAB */
+        .fab {
+            position: fixed;
+            bottom: 100px;
+            right: 32px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 98;
+        }
+
+        .fab:hover {
+            transform: scale(1.1);
+        }
+
+        /* Scheme variations */
+        .scheme-content {
+            display: none;
+        }
+
+        .scheme-content.active {
+            display: block;
+        }
+
+        /* Scheme 2: Two buttons */
+        .scheme-2 .action-btn {
+            flex: 1;
+            max-width: 300px;
+        }
+
+        /* Scheme 3: No bottom bar */
+        .scheme-3 .container {
+            padding-bottom: 60px;
+        }
+
+        /* Labels */
+        .scheme-label {
+            text-align: center;
+            padding: 12px;
+            background: rgba(255, 107, 107, 0.1);
+            border-radius: 12px;
+            margin-bottom: 24px;
+            font-weight: 600;
+            color: var(--primary);
+        }
+
+        .scheme-label strong {
+            display: block;
+            font-size: 18px;
+            margin-bottom: 4px;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .vibe-report-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Switcher -->
+    <div class="switcher">
+        <span class="switcher-label">选择方案：</span>
+        <div class="switcher-buttons">
+            <button class="switcher-btn active" onclick="switchScheme(1)">方案 1</button>
+            <button class="switcher-btn" onclick="switchScheme(2)">方案 2</button>
+            <button class="switcher-btn" onclick="switchScheme(3)">方案 3</button>
+        </div>
+    </div>
+
+    <div class="main-wrapper">
+        <!-- Scheme 1: Single Button -->
+        <div id="scheme-1" class="scheme-content active">
+            <div class="scheme-label">
+                <strong>方案 1：简化底部按钮（推荐）</strong>
+                底部仅保留"开始对话"，移除"查看趋势图"
+            </div>
+
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo">VibeAILife</div>
+                    <nav class="nav-links">
+                        <a href="#" class="nav-link">📊 报告</a>
+                        <a href="#" class="nav-link">💬 对话</a>
+                        <a href="#" class="nav-link">🎯 目标</a>
+                        <a href="#" class="nav-link">⚙️ 设置</a>
+                        <div class="avatar">U</div>
+                    </nav>
+                </div>
+            </header>
+
+            <div class="container">
+                <h1 class="section-title">📊 你的本周 Vibe Report</h1>
+
+                <div class="vibe-report-grid">
+                    <div class="vibe-card success">
+                        <div class="vibe-card-icon">✅</div>
+                        <h3 class="vibe-card-title">进步</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 睡眠平均 +45 分钟</li>
+                            <li>• 运动频率: 4 次/周 ↑ 2 次</li>
+                            <li>• 社交能量提升</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card warning">
+                        <div class="vibe-card-icon">⚠️</div>
+                        <h3 class="vibe-card-title">注意</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 周三压力值最高 (8.2/10)</li>
+                            <li>• 建议周三安排更多休息</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card insight">
+                        <div class="vibe-card-icon">💡</div>
+                        <h3 class="vibe-card-title">发现</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 运动日的情绪评分平均高 1.8 分</li>
+                            <li>• 睡眠 < 7h 时，工作效率下降 40%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h1 class="section-title">🎯 我的目标</h1>
+
+                <div class="goals-grid">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">🏃</span>
+                            <h3 class="goal-title">每周运动 4 次</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill primary" style="width: 80%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周已 3 次</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">😴</span>
+                            <h3 class="goal-title">23:30 前睡觉</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill secondary" style="width: 60%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周达标 4 天</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <button class="action-btn primary">
+                    💬 开始对话
+                </button>
+            </div>
+
+            <button class="fab">➕</button>
+        </div>
+
+        <!-- Scheme 2: Quick Actions -->
+        <div id="scheme-2" class="scheme-content">
+            <div class="scheme-label">
+                <strong>方案 2：底部快速功能区</strong>
+                左边记录 Vibe，右边对话，移除 FAB
+            </div>
+
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo">VibeAILife</div>
+                    <nav class="nav-links">
+                        <a href="#" class="nav-link">📊 报告</a>
+                        <a href="#" class="nav-link">🎯 目标</a>
+                        <a href="#" class="nav-link">⚙️ 设置</a>
+                        <div class="avatar">U</div>
+                    </nav>
+                </div>
+            </header>
+
+            <div class="container">
+                <h1 class="section-title">📊 你的本周 Vibe Report</h1>
+
+                <div class="vibe-report-grid">
+                    <div class="vibe-card success">
+                        <div class="vibe-card-icon">✅</div>
+                        <h3 class="vibe-card-title">进步</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 睡眠平均 +45 分钟</li>
+                            <li>• 运动频率: 4 次/周 ↑ 2 次</li>
+                            <li>• 社交能量提升</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card warning">
+                        <div class="vibe-card-icon">⚠️</div>
+                        <h3 class="vibe-card-title">注意</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 周三压力值最高 (8.2/10)</li>
+                            <li>• 建议周三安排更多休息</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card insight">
+                        <div class="vibe-card-icon">💡</div>
+                        <h3 class="vibe-card-title">发现</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 运动日的情绪评分平均高 1.8 分</li>
+                            <li>• 睡眠 < 7h 时，工作效率下降 40%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h1 class="section-title">🎯 我的目标</h1>
+
+                <div class="goals-grid">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">🏃</span>
+                            <h3 class="goal-title">每周运动 4 次</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill primary" style="width: 80%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周已 3 次</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">😴</span>
+                            <h3 class="goal-title">23:30 前睡觉</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill secondary" style="width: 60%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周达标 4 天</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bottom-bar">
+                <button class="action-btn secondary">
+                    📝 记录 Vibe
+                </button>
+                <button class="action-btn primary">
+                    💬 开始对话
+                </button>
+            </div>
+        </div>
+
+        <!-- Scheme 3: No Bottom Bar -->
+        <div id="scheme-3" class="scheme-content">
+            <div class="scheme-label">
+                <strong>方案 3：无底部固定栏</strong>
+                移除底部按钮，所有功能通过导航栏访问
+            </div>
+
+            <header class="header">
+                <div class="header-content">
+                    <div class="logo">VibeAILife</div>
+                    <nav class="nav-links">
+                        <a href="#" class="nav-link">📊 报告</a>
+                        <a href="#" class="nav-link">💬 对话</a>
+                        <a href="#" class="nav-link">🎯 目标</a>
+                        <a href="#" class="nav-link">⚙️ 设置</a>
+                        <div class="avatar">U</div>
+                    </nav>
+                </div>
+            </header>
+
+            <div class="container">
+                <h1 class="section-title">📊 你的本周 Vibe Report</h1>
+
+                <div class="vibe-report-grid">
+                    <div class="vibe-card success">
+                        <div class="vibe-card-icon">✅</div>
+                        <h3 class="vibe-card-title">进步</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 睡眠平均 +45 分钟</li>
+                            <li>• 运动频率: 4 次/周 ↑ 2 次</li>
+                            <li>• 社交能量提升</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card warning">
+                        <div class="vibe-card-icon">⚠️</div>
+                        <h3 class="vibe-card-title">注意</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 周三压力值最高 (8.2/10)</li>
+                            <li>• 建议周三安排更多休息</li>
+                        </ul>
+                    </div>
+
+                    <div class="vibe-card insight">
+                        <div class="vibe-card-icon">💡</div>
+                        <h3 class="vibe-card-title">发现</h3>
+                        <ul class="vibe-card-content">
+                            <li>• 运动日的情绪评分平均高 1.8 分</li>
+                            <li>• 睡眠 < 7h 时，工作效率下降 40%</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <h1 class="section-title">🎯 我的目标</h1>
+
+                <div class="goals-grid">
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">🏃</span>
+                            <h3 class="goal-title">每周运动 4 次</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill primary" style="width: 80%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周已 3 次</span>
+                            <span>80%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+
+                    <div class="goal-card">
+                        <div class="goal-header">
+                            <span class="goal-icon">😴</span>
+                            <h3 class="goal-title">23:30 前睡觉</h3>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill secondary" style="width: 60%;"></div>
+                        </div>
+                        <div class="progress-text">
+                            <span>本周达标 4 天</span>
+                            <span>60%</span>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="btn btn-primary">✓ 打卡</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- No bottom bar -->
+            </div>
+
+            <button class="fab">➕</button>
+        </div>
+    </div>
+
+    <script>
+        function switchScheme(num) {
+            // Update buttons
+            document.querySelectorAll('.switcher-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update content
+            document.querySelectorAll('.scheme-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById('scheme-' + num).classList.add('active');
+
+            // Scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

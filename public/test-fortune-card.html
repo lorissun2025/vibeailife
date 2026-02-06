@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>测试签文卡片显示</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .fortune-card {
+            margin: 20px 0;
+            padding: 20px;
+            border-radius: 16px;
+            background: linear-gradient(to bottom right, rgba(255, 107, 107, 0.1), rgba(149, 213, 178, 0.1));
+            border: 2px solid rgba(255, 107, 107, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+        .fortune-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(to bottom left, rgba(255, 107, 107, 0.2), transparent);
+            border-bottom-left-radius: 100%;
+        }
+        .fortune-card::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(to top right, rgba(149, 213, 178, 0.2), transparent);
+            border-top-right-radius: 100%;
+        }
+        .fortune-content {
+            position: relative;
+            z-index: 1;
+        }
+        .fortune-label {
+            font-size: 14px;
+            font-weight: 500;
+            color: rgba(255, 107, 107, 0.8);
+            margin-bottom: 8px;
+        }
+        .fortune-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #FF6B6B;
+            margin-bottom: 8px;
+        }
+        .fortune-text {
+            font-size: 14px;
+            font-style: italic;
+            color: rgba(0, 0, 0, 0.9);
+            margin-bottom: 8px;
+        }
+        .fortune-interpretation {
+            font-size: 14px;
+            color: rgba(0, 0, 0, 0.6);
+            margin-top: 8px;
+        }
+        button {
+            background: #FF6B6B;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover { background: #ee5a5a; }
+        .message {
+            background: #f5f5f5;
+            padding: 15px;
+            border-radius: 12px;
+            margin: 10px 0;
+        }
+        .ai-message {
+            background: linear-gradient(to right, #FFF8F0, #ffffff);
+            border-left: 4px solid #FF6B6B;
+        }
+    </style>
+</head>
+<body>
+    <h1>🎴 签文卡片显示测试</h1>
+
+    <div class="section">
+        <h2>预期效果</h2>
+        <p>当 AI 回复时，应该在消息前面显示一个签文卡片，包含：</p>
+        <ul>
+            <li>📜 图标 + "今日签文" 标签</li>
+            <li>签文标题（如"流水不争先"）</li>
+            <li>签文内容（如"流水不争先，争的是滔滔不绝"）</li>
+            <li>签文解读</li>
+        </ul>
+    </div>
+
+    <div class="fortune-card">
+        <div class="fortune-content">
+            <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+                <span style="font-size: 24px;">📜</span>
+                <span class="fortune-label">今日签文</span>
+            </div>
+            <p class="fortune-title">流水不争先</p>
+            <p class="fortune-text">"流水不争先，争的是滔滔不绝"</p>
+            <p class="fortune-interpretation">意思是说，持续比一时的速度更重要。</p>
+        </div>
+    </div>
+
+    <div class="message ai-message">
+        <strong>🤖 AI：</strong> 早上好！今天抽到"流水不争先"这支签，特别喜欢这个意境呢。<br><br>
+        流水不争先，争的是滔滔不绝 - 意思是说，持续比一时的速度更重要。<br><br>
+        今天想聊点什么？我随时在这里陪伴你 💝
+    </div>
+
+    <div class="section">
+        <h2>调试步骤</h2>
+        <ol>
+            <li>打开浏览器开发者工具（按 F12）</li>
+            <li>切换到 Console 标签</li>
+            <li>清除旧日志</li>
+            <li>访问 <code>/test-fortune.html</code> 清除签文记录</li>
+            <li>重新抽签并开始对话</li>
+            <li>查看控制台是否有以下日志：
+                <ul>
+                    <li><code>🎉 收到签文数据: {...}</code> - 表示签文数据已传递到前端</li>
+                    <li><code>📜 MessageList currentFortune: {...}</code> - 表示 MessageList 收到签文数据</li>
+                </ul>
+            </li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>如果看不到签文卡片</h2>
+        <p>可能的原因：</p>
+        <ol>
+            <li><strong>签文数据未传递</strong>：控制台没有显示"收到签文数据"
+                <br>→ 检查服务器日志，确认签文被正确获取</li>
+            <li><strong>显示条件不满足</strong>：签文卡片只在第一条 AI 消息前显示
+                <br>→ 确保这是新对话的第一条 AI 消息</li>
+            <li><strong>CSS 未加载</strong>：样式可能未正确应用
+                <br>→ 刷新页面或清除缓存</li>
+        </ol>
+    </div>
+
+    <div class="section">
+        <h2>快速测试</h2>
+        <button onclick="window.location.href='/test-fortune.html'">🗑️ 清除签文记录</button>
+        <button onclick="window.location.href='/dashboard'">🏠 返回首页</button>
+    </div>
+
+    <script>
+        // 页面加载时显示提示
+        window.addEventListener('load', () => {
+            console.log('='.repeat(60));
+            console.log('📜 签文卡片显示测试');
+            console.log('='.repeat(60));
+            console.log('请按照以下步骤测试：');
+            console.log('1. 点击"清除签文记录"按钮');
+            console.log('2. 完成抽签流程');
+            console.log('3. 点击"开始今天的对话"');
+            console.log('4. 查看浏览器控制台（F12）的日志');
+            console.log('5. 查看签文卡片是否正确显示');
+            console.log('='.repeat(60));
+        });
+    </script>
+</body>
+</html>

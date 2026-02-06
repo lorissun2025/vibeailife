@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeAILife - Zen Minimalist</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Noto+Sans+JP:wght@200;300;400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cream: #F5F2EB;
+            --charcoal: #1A1A1A;
+            --sage: #7A8B7A;
+            --sage-light: #A8B5A8;
+            --sand: #D4CDBE;
+            --ink: #2C2C2C;
+            --paper: #FAF8F5;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            font-weight: 300;
+            background: var(--cream);
+            color: var(--ink);
+            line-height: 1.8;
+            overflow-x: hidden;
+        }
+
+        /* Subtle grain texture */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 60px 40px;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 80px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        .logo {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 32px;
+            font-weight: 300;
+            letter-spacing: 0.1em;
+            color: var(--charcoal);
+        }
+
+        nav {
+            display: flex;
+            gap: 40px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--sage);
+            font-size: 13px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            transition: color 0.3s ease;
+        }
+
+        nav a:hover {
+            color: var(--charcoal);
+        }
+
+        /* Welcome */
+        .welcome {
+            margin-bottom: 100px;
+            animation: fadeIn 1s ease;
+        }
+
+        .welcome h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 56px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            letter-spacing: 0.02em;
+        }
+
+        .welcome p {
+            color: var(--sage);
+            font-size: 15px;
+            letter-spacing: 0.05em;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 30px;
+        }
+
+        /* Card Base */
+        .card {
+            background: var(--paper);
+            border: 1px solid var(--sand);
+            padding: 50px;
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, transparent 0%, rgba(122, 139, 122, 0.03) 100%);
+            opacity: 0;
+            transition: opacity 0.4s ease;
+        }
+
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 40px rgba(26, 26, 26, 0.05);
+        }
+
+        .card-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 22px;
+            font-weight: 400;
+            margin-bottom: 30px;
+            letter-spacing: 0.05em;
+            color: var(--charcoal);
+        }
+
+        /* Fortune Card */
+        .fortune-card {
+            grid-column: span 5;
+            animation: fadeIn 1s ease 0.1s both;
+        }
+
+        .fortune-display {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .fortune-level {
+            font-size: 11px;
+            letter-spacing: 0.3em;
+            color: var(--sage);
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+
+        .fortune-title {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 36px;
+            font-weight: 300;
+            margin-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .fortune-text {
+            font-size: 15px;
+            color: var(--sage);
+            line-height: 2;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .fortune-interpretation {
+            font-size: 13px;
+            color: var(--ink);
+            line-height: 1.8;
+            opacity: 0.8;
+        }
+
+        .btn-fortune {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 16px 40px;
+            background: var(--charcoal);
+            color: var(--cream);
+            text-decoration: none;
+            font-size: 12px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-fortune:hover {
+            background: var(--sage);
+            transform: translateY(1px);
+        }
+
+        /* Vibe Tracker */
+        .vibe-card {
+            grid-column: span 7;
+            animation: fadeIn 1s ease 0.2s both;
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .mood-btn {
+            width: 50px;
+            height: 50px;
+            border: 1px solid var(--sand);
+            background: transparent;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .mood-btn:hover {
+            border-color: var(--sage);
+            background: rgba(122, 139, 122, 0.05);
+        }
+
+        .mood-btn.active {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: var(--cream);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            border: 1px solid var(--sand);
+            font-size: 11px;
+            letter-spacing: 0.1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .tag:hover {
+            border-color: var(--sage);
+        }
+
+        .tag.active {
+            background: var(--sage-light);
+            border-color: var(--sage);
+            color: var(--cream);
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 15px 0;
+            border: none;
+            border-bottom: 1px solid var(--sand);
+            background: transparent;
+            font-family: 'Noto Sans JP', sans-serif;
+            font-size: 14px;
+            color: var(--ink);
+            outline: none;
+            transition: border-color 0.3s ease;
+        }
+
+        .note-input:focus {
+            border-color: var(--sage);
+        }
+
+        .note-input::placeholder {
+            color: var(--sage-light);
+        }
+
+        /* Quick Actions */
+        .actions-card {
+            grid-column: span 12;
+            animation: fadeIn 1s ease 0.3s both;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 20px;
+        }
+
+        .action-item {
+            text-align: center;
+            padding: 30px 20px;
+            border: 1px solid var(--sand);
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .action-item:hover {
+            background: var(--sage);
+            border-color: var(--sage);
+            color: var(--cream);
+        }
+
+        .action-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        .action-item:hover .action-icon {
+            opacity: 1;
+        }
+
+        .action-label {
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+        }
+
+        /* Goal Card */
+        .goal-card {
+            grid-column: span 4;
+            animation: fadeIn 1s ease 0.4s both;
+        }
+
+        .goal-item {
+            padding: 20px 0;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        .goal-item:last-child {
+            border-bottom: none;
+        }
+
+        .goal-title {
+            font-size: 14px;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .goal-progress {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 2px;
+            background: var(--sand);
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--sage);
+            transition: width 0.6s ease;
+        }
+
+        .progress-text {
+            font-size: 11px;
+            color: var(--sage);
+        }
+
+        /* Recommendation Card */
+        .rec-card {
+            grid-column: span 8;
+            animation: fadeIn 1s ease 0.5s both;
+        }
+
+        .rec-item {
+            display: flex;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--sand);
+        }
+
+        .rec-item:last-child {
+            border-bottom: none;
+        }
+
+        .rec-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--sage-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .rec-content h4 {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 16px;
+            font-weight: 400;
+            margin-bottom: 6px;
+        }
+
+        .rec-content p {
+            font-size: 13px;
+            color: var(--sage);
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .fortune-card { grid-column: span 6; }
+            .vibe-card { grid-column: span 6; }
+            .goal-card { grid-column: span 3; }
+            .rec-card { grid-column: span 6; }
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 40px 20px;
+            }
+            .welcome h1 {
+                font-size: 36px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .fortune-card,
+            .vibe-card,
+            .goal-card,
+            .rec-card,
+            .actions-card {
+                grid-column: span 1;
+            }
+        }
+
+        /* Style Badge */
+        .style-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--charcoal);
+            color: var(--cream);
+            padding: 10px 20px;
+            font-size: 10px;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            z-index: 100;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">VibeAILife</div>
+            <nav>
+                <a href="#">Dashboard</a>
+                <a href="#">Chat</a>
+                <a href="#">Vibe</a>
+                <a href="#">Goals</a>
+                <a href="#">Settings</a>
+            </nav>
+        </header>
+
+        <div class="welcome">
+            <h1>今天，感觉如何？</h1>
+            <p>记录当下，发现内心的声音</p>
+        </div>
+
+        <div class="grid">
+            <!-- Fortune Card -->
+            <div class="card fortune-card">
+                <div class="card-title">今日签文</div>
+                <div class="fortune-display">
+                    <div class="fortune-level">上上签</div>
+                    <div class="fortune-title">流水不争先</div>
+                    <div class="fortune-text">流水不争先，争的是滔滔不绝</div>
+                    <div class="fortune-interpretation">
+                        持续比速度更重要，坚持比爆发更可贵。不要急于一时的成就，保持稳定的前进姿态，你终将到达想去的地方。
+                    </div>
+                </div>
+                <button class="btn-fortune">重新抽签</button>
+            </div>
+
+            <!-- Vibe Tracker -->
+            <div class="card vibe-card">
+                <div class="card-title">记录 Vibe</div>
+                <div class="mood-selector">
+                    <button class="mood-btn">😔</button>
+                    <button class="mood-btn">😐</button>
+                    <button class="mood-btn active">😊</button>
+                    <button class="mood-btn">😄</button>
+                    <button class="mood-btn">🥰</button>
+                </div>
+                <div class="mood-selector">
+                    <button class="mood-btn">💫</button>
+                    <button class="mood-btn">✨</button>
+                    <button class="mood-btn active">⚡</button>
+                    <button class="mood-btn">🔥</button>
+                    <button class="mood-btn">🚀</button>
+                </div>
+                <div class="tags">
+                    <span class="tag">工作</span>
+                    <span class="tag active">学习</span>
+                    <span class="tag">运动</span>
+                    <span class="tag">休息</span>
+                    <span class="tag">社交</span>
+                    <span class="tag">创造</span>
+                </div>
+                <input type="text" class="note-input" placeholder="写下当下的想法...">
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card actions-card">
+                <div class="actions-grid">
+                    <div class="action-item">
+                        <div class="action-icon">💬</div>
+                        <div class="action-label">开始对话</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎴</div>
+                        <div class="action-label">每日签文</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">📊</div>
+                        <div class="action-label">记录 Vibe</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎯</div>
+                        <div class="action-label">我的目标</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="card goal-card">
+                <div class="card-title">目标进度</div>
+                <div class="goal-item">
+                    <div class="goal-title">每天运动30分钟</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <span class="progress-text">60%</span>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-title">阅读12本书</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <span class="progress-text">33%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="card rec-card">
+                <div class="card-title">为你推荐</div>
+                <div class="rec-item">
+                    <div class="rec-icon">🌱</div>
+                    <div class="rec-content">
+                        <h4>心情低落时的活动建议</h4>
+                        <p>试试这些活动：听喜欢的音乐、散步10分钟、和朋友聊天、或者写日记。记住，不好也没关系。</p>
+                    </div>
+                </div>
+                <div class="rec-item">
+                    <div class="rec-icon">💭</div>
+                    <div class="rec-content">
+                        <h4>恢复精力的冥想练习</h4>
+                        <p>尝试5分钟的深呼吸冥想，或者短暂的小睡。恢复精力是提升效率的关键。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="style-badge">Zen Minimalist</div>
+
+    <script>
+        // Mood selector interaction
+        document.querySelectorAll('.mood-selector').forEach((selector, idx) => {
+            selector.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selector.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+
+        // Tag interaction
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('active');
+            });
+        });
+
+        // Action items hover effect
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('click', () => {
+                item.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    item.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>

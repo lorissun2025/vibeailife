@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🎴 签文功能测试</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            line-height: 1.6;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 { color: #667eea; margin-bottom: 10px; }
+        .subtitle { color: #666; margin-bottom: 30px; font-size: 14px; }
+        .section {
+            background: #f9f9f9;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 12px;
+            border-left: 4px solid #667eea;
+        }
+        .button-group { display: flex; gap: 10px; flex-wrap: wrap; }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        button:hover { background: #5568d3; transform: translateY(-2px); }
+        button:active { transform: translateY(0); }
+        button.secondary { background: #48bb78; }
+        button.secondary:hover { background: #38a169; }
+        .result {
+            margin-top: 15px;
+            padding: 15px;
+            border-radius: 8px;
+            display: none;
+        }
+        .result.success { background: #d1fae5; color: #065f46; display: block; }
+        .result.error { background: #fee2e2; color: #991b1b; display: block; }
+        .code {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 15px;
+            border-radius: 8px;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Courier New', monospace;
+            font-size: 12px;
+            margin: 10px 0;
+        }
+        .checklist { list-style: none; padding: 0; }
+        .checklist li {
+            padding: 8px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+        .checklist li:last-child { border-bottom: none; }
+        .badge {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+        .badge.success { background: #d1fae5; color: #065f46; }
+        .badge.error { background: #fee2e2; color: #991b1b; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🎴 签文功能测试工具</h1>
+        <p class="subtitle">用于测试签文代入和显示功能</p>
+
+        <div class="section">
+            <h2>1️⃣ 清除签文记录</h2>
+            <p>重新测试前，先清除今日的抽签记录：</p>
+            <div class="button-group" style="margin-top: 15px;">
+                <button onclick="clearFortune()">🗑️ 清除今日签文</button>
+                <button onclick="checkFortune()" class="secondary">📜 查看今日签文</button>
+            </div>
+            <div id="clearResult" class="result"></div>
+            <div id="fortuneInfo" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="section">
+            <h2>2️⃣ 开始测试流程</h2>
+            <p>清除签文后，按照以下步骤测试：</p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li>点击上方"清除今日签文"按钮</li>
+                <li>等待自动跳转到首页，或手动点击下方按钮</li>
+                <li>完成抽签流程</li>
+                <li>点击"开始今天的对话"</li>
+                <li><strong>打开浏览器控制台（按 F12）查看日志</strong></li>
+            </ol>
+            <div class="button-group" style="margin-top: 15px;">
+                <button onclick="window.location.href='/dashboard'">🏠 返回首页</button>
+                <button onclick="window.location.href='/chat'" class="secondary">💬 直接对话</button>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>3️⃣ 检查清单</h2>
+            <p>测试时检查以下项目：</p>
+            <ul class="checklist">
+                <li>✅ 控制台显示 "🎯 准备发送签文数据到前端"</li>
+                <li>✅ 控制台显示 "🎉 收到签文数据"</li>
+                <li>✅ 控制台显示 "📜 MessageList currentFortune"</li>
+                <li>✅ 对话中看到签文卡片（📜 图标）</li>
+                <li>✅ 签文卡片显示标题、内容、解读</li>
+                <li>✅ 签文卡片有渐变背景色</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>4️⃣ 调试信息</h2>
+            <p>如果签文没有显示，在浏览器控制台运行以下命令：</p>
+            <div class="code">
+// 检查今日签文
+fetch('/api/fortune/today')
+  .then(r => r.json())
+  .then(data => console.log('今日签文:', data))
+            </div>
+            <div class="code" style="margin-top: 10px;">
+// 查看签文卡片测试页面
+window.location.href = '/test-fortune-display'
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>5️⃣ 预期效果</h2>
+            <p>签文卡片应该长这样：</p>
+            <div style="margin: 15px 0; padding: 20px; border-radius: 16px; background: linear-gradient(to bottom right, rgba(255, 107, 107, 0.1), rgba(149, 213, 178, 0.1)); border: 2px solid rgba(255, 107, 107, 0.3); position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; right: 0; width: 60px; height: 60px; background: linear-gradient(to bottom left, rgba(255, 107, 107, 0.2), transparent); border-bottom-left-radius: 100%;"></div>
+                <div style="position: absolute; bottom: 0; left: 0; width: 40px; height: 40px; background: linear-gradient(to top right, rgba(149, 213, 178, 0.2), transparent); border-top-right-radius: 100%;"></div>
+                <div style="position: relative; display: flex; align-items: start; gap: 12px;">
+                    <span style="font-size: 24px;">📜</span>
+                    <div>
+                        <div style="font-size: 12px; font-weight: 500; color: rgba(255, 107, 107, 0.8); margin-bottom: 8px;">今日签文</div>
+                        <p style="font-size: 16px; font-weight: bold; color: #FF6B6B; margin: 4px 0;">流水不争先</p>
+                        <p style="font-size: 14px; font-style: italic; margin: 4px 0;">"流水不争先，争的是滔滔不绝"</p>
+                        <p style="font-size: 14px; color: rgba(0,0,0,0.6); margin-top: 8px;">意思是说，持续比一时的速度更重要。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        async function clearFortune() {
+            const resultDiv = document.getElementById('clearResult');
+            resultDiv.className = 'result';
+            resultDiv.textContent = '⏳ 清除中...';
+            resultDiv.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/fortune/clear', {
+                    method: 'POST'
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    resultDiv.className = 'result success';
+                    resultDiv.innerHTML = `✅ ${data.message}<br>已删除 ${data.deleted} 条记录<br><br>🔄 3秒后自动跳转到首页...`;
+
+                    setTimeout(() => {
+                        window.location.href = '/dashboard';
+                    }, 3000);
+                } else {
+                    resultDiv.className = 'result error';
+                    resultDiv.textContent = '❌ 失败: ' + JSON.stringify(data);
+                }
+            } catch (error) {
+                resultDiv.className = 'result error';
+                resultDiv.textContent = '❌ 错误: ' + error.message;
+            }
+        }
+
+        async function checkFortune() {
+            const infoDiv = document.getElementById('fortuneInfo');
+            infoDiv.innerHTML = '⏳ 查询中...';
+
+            try {
+                const response = await fetch('/api/fortune/today');
+                const data = await response.json();
+
+                if (data.success && data.data) {
+                    const fortune = data.data;
+                    infoDiv.innerHTML = `
+                        <div style="background: #d1fae5; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            <strong>✅ 今日已抽签</strong><br>
+                            <strong>标题：</strong>${fortune.title}<br>
+                            <strong>内容：</strong>${fortune.text}<br>
+                            <strong>已代入次数：</strong>${fortune.appliedCount || 0}/5
+                        </div>
+                    `;
+                } else {
+                    infoDiv.innerHTML = `
+                        <div style="background: #fef3c7; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                            ⚠️ 今日还没有抽签
+                        </div>
+                    `;
+                }
+            } catch (error) {
+                infoDiv.innerHTML = `
+                    <div style="background: #fee2e2; padding: 15px; border-radius: 8px; margin-top: 10px;">
+                        ❌ 查询失败: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // 页面加载时自动检查签文状态
+        window.addEventListener('load', () => {
+            console.log('='.repeat(60));
+            console.log('🎴 签文功能测试工具');
+            console.log('='.repeat(60));
+            console.log('1. 点击"清除今日签文"重新开始测试');
+            console.log('2. 完成抽签流程后点击"开始今天的对话"');
+            console.log('3. 打开控制台（F12）查看调试日志');
+            console.log('4. 确认看到签文卡片显示');
+            console.log('='.repeat(60));
+
+            // 自动检查签文状态
+            checkFortune();
+        });
+    </script>
+</body>
+</html>

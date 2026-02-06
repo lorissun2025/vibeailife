@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VibeAILife - Warm Organic</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;500;600;700&family=Nunito:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --coral: #FF6B6B;
+            --coral-light: #FF8787;
+            --sage: #95D5B2;
+            --sage-dark: #74C69D;
+            --cream: #FFF8F0;
+            --peach: #FFD6A5;
+            --lavender: #D8B4E2;
+            --sand: #E8D5C4;
+            --text-dark: #2D3436;
+            --text-medium: #636E72;
+            --text-light: #B2BEC3;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background: var(--cream);
+            color: var(--text-dark);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* Organic blob background */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            right: -20%;
+            width: 80%;
+            height: 80%;
+            background: radial-gradient(ellipse at center, rgba(255, 107, 107, 0.08) 0%, transparent 70%);
+            border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+            animation: morph 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            bottom: -30%;
+            left: -10%;
+            width: 60%;
+            height: 60%;
+            background: radial-gradient(ellipse at center, rgba(149, 213, 178, 0.1) 0%, transparent 70%);
+            border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+            animation: morph 25s ease-in-out infinite reverse;
+            z-index: 0;
+        }
+
+        @keyframes morph {
+            0%, 100% {
+                border-radius: 60% 40% 30% 70% / 60% 30% 70% 40%;
+                transform: rotate(0deg);
+            }
+            50% {
+                border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%;
+                transform: rotate(180deg);
+            }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 50px 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Header */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 60px;
+            padding: 25px 35px;
+            background: white;
+            border-radius: 30px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+        }
+
+        .logo {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 26px;
+            font-weight: 700;
+            color: var(--coral);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo span {
+            background: linear-gradient(135deg, var(--coral) 0%, var(--coral-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: var(--text-medium);
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            padding: 8px 16px;
+            border-radius: 15px;
+        }
+
+        nav a:hover {
+            color: var(--coral);
+            background: rgba(255, 107, 107, 0.08);
+        }
+
+        /* Welcome */
+        .welcome {
+            margin-bottom: 50px;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .welcome h1 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 44px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .welcome p {
+            color: var(--text-medium);
+            font-size: 16px;
+        }
+
+        /* Grid */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 25px;
+        }
+
+        /* Card Base */
+        .card {
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            position: relative;
+            border: 2px solid transparent;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        }
+
+        .card-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-dark);
+        }
+
+        .card-title .icon {
+            font-size: 24px;
+        }
+
+        /* Fortune Card */
+        .fortune-card {
+            grid-column: span 5;
+            animation: fadeInUp 0.8s ease 0.1s both;
+            border-color: rgba(255, 107, 107, 0.1);
+        }
+
+        .fortune-card:hover {
+            border-color: var(--coral-light);
+        }
+
+        .fortune-display {
+            text-align: center;
+            padding: 35px 0;
+        }
+
+        .fortune-badge {
+            display: inline-block;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--coral-light) 100%);
+            color: white;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+        }
+
+        .fortune-title {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 16px;
+            color: var(--text-dark);
+        }
+
+        .fortune-text {
+            font-size: 17px;
+            color: var(--text-medium);
+            line-height: 1.8;
+            margin-bottom: 25px;
+            font-weight: 500;
+        }
+
+        .fortune-interpretation {
+            font-size: 14px;
+            color: var(--text-light);
+            line-height: 1.7;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.05) 0%, rgba(255, 214, 165, 0.05) 100%);
+            border-radius: 20px;
+        }
+
+        .btn-fortune {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 15px 35px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--coral-light) 100%);
+            color: white;
+            text-decoration: none;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            border-radius: 20px;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+        }
+
+        .btn-fortune:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(255, 107, 107, 0.4);
+        }
+
+        /* Vibe Tracker */
+        .vibe-card {
+            grid-column: span 7;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            border-color: rgba(149, 213, 178, 0.1);
+        }
+
+        .vibe-card:hover {
+            border-color: var(--sage);
+        }
+
+        .mood-section {
+            margin-bottom: 25px;
+        }
+
+        .mood-label {
+            font-size: 13px;
+            color: var(--text-medium);
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .mood-selector {
+            display: flex;
+            gap: 12px;
+        }
+
+        .mood-btn {
+            width: 50px;
+            height: 50px;
+            border: 3px solid var(--sand);
+            background: white;
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 15px;
+        }
+
+        .mood-btn:hover {
+            border-color: var(--sage);
+            transform: scale(1.1);
+        }
+
+        .mood-btn.active {
+            background: linear-gradient(135deg, var(--sage) 0%, var(--sage-dark) 100%);
+            border-color: var(--sage);
+            transform: scale(1.15);
+            box-shadow: 0 5px 15px rgba(149, 213, 178, 0.3);
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .tag {
+            padding: 10px 18px;
+            background: white;
+            border: 2px solid var(--sand);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            border-radius: 20px;
+            color: var(--text-medium);
+        }
+
+        .tag:hover {
+            border-color: var(--lavender);
+            transform: scale(1.05);
+        }
+
+        .tag.active {
+            background: var(--lavender);
+            border-color: var(--lavender);
+            color: var(--text-dark);
+            transform: scale(1.05);
+        }
+
+        .note-input {
+            width: 100%;
+            padding: 16px 20px;
+            background: white;
+            border: 2px solid var(--sand);
+            border-radius: 20px;
+            font-family: 'Nunito', sans-serif;
+            font-size: 14px;
+            color: var(--text-dark);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .note-input:focus {
+            border-color: var(--peach);
+            box-shadow: 0 0 0 4px rgba(255, 214, 165, 0.1);
+        }
+
+        .note-input::placeholder {
+            color: var(--text-light);
+        }
+
+        /* Quick Actions */
+        .actions-card {
+            grid-column: span 12;
+            animation: fadeInUp 0.8s ease 0.3s both;
+        }
+
+        .actions-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .action-item {
+            text-align: center;
+            padding: 28px 20px;
+            background: white;
+            border: 2px solid var(--sand);
+            border-radius: 25px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .action-item:hover {
+            transform: translateY(-5px);
+            border-color: var(--coral);
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.15);
+        }
+
+        .action-icon {
+            font-size: 32px;
+            margin-bottom: 12px;
+        }
+
+        .action-label {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.05em;
+            color: var(--text-medium);
+        }
+
+        /* Goal Card */
+        .goal-card {
+            grid-column: span 4;
+            animation: fadeInUp 0.8s ease 0.4s both;
+            border-color: rgba(216, 180, 226, 0.2);
+        }
+
+        .goal-card:hover {
+            border-color: var(--lavender);
+        }
+
+        .goal-item {
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(216, 180, 226, 0.08) 0%, rgba(255, 214, 165, 0.08) 100%);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .goal-item:hover {
+            transform: translateX(5px);
+            background: linear-gradient(135deg, rgba(216, 180, 226, 0.12) 0%, rgba(255, 214, 165, 0.12) 100%);
+        }
+
+        .goal-title {
+            font-size: 15px;
+            font-weight: 700;
+            margin-bottom: 12px;
+            color: var(--text-dark);
+        }
+
+        .goal-progress {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .progress-bar {
+            flex: 1;
+            height: 8px;
+            background: var(--sand);
+            border-radius: 10px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--lavender) 0%, var(--peach) 100%);
+            border-radius: 10px;
+            transition: width 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .progress-text {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-medium);
+        }
+
+        /* Recommendation Card */
+        .rec-card {
+            grid-column: span 8;
+            animation: fadeInUp 0.8s ease 0.5s both;
+            border-color: rgba(255, 214, 165, 0.2);
+        }
+
+        .rec-card:hover {
+            border-color: var(--peach);
+        }
+
+        .rec-item {
+            display: flex;
+            gap: 20px;
+            padding: 22px;
+            background: linear-gradient(135deg, rgba(255, 214, 165, 0.08) 0%, rgba(255, 107, 107, 0.05) 100%);
+            border-radius: 20px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .rec-item:hover {
+            transform: translateX(8px);
+            background: linear-gradient(135deg, rgba(255, 214, 165, 0.12) 0%, rgba(255, 107, 107, 0.08) 100%);
+        }
+
+        .rec-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--peach) 0%, var(--coral-light) 100%);
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            flex-shrink: 0;
+            box-shadow: 0 5px 15px rgba(255, 214, 165, 0.3);
+        }
+
+        .rec-content h4 {
+            font-family: 'Quicksand', sans-serif;
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-dark);
+        }
+
+        .rec-content p {
+            font-size: 14px;
+            color: var(--text-medium);
+            line-height: 1.6;
+        }
+
+        /* Animations */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .grid {
+                grid-template-columns: repeat(6, 1fr);
+            }
+            .fortune-card { grid-column: span 6; }
+            .vibe-card { grid-column: span 6; }
+            .goal-card { grid-column: span 3; }
+            .rec-card { grid-column: span 6; }
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 30px 20px;
+            }
+            .welcome h1 {
+                font-size: 32px;
+            }
+            .grid {
+                grid-template-columns: 1fr;
+            }
+            .fortune-card,
+            .vibe-card,
+            .goal-card,
+            .rec-card,
+            .actions-card {
+                grid-column: span 1;
+            }
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            header {
+                flex-direction: column;
+                gap: 15px;
+                padding: 20px;
+            }
+            nav {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+        }
+
+        /* Style Badge */
+        .style-badge {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--coral) 0%, var(--coral-light) 100%);
+            color: white;
+            padding: 14px 26px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            border-radius: 25px;
+            z-index: 100;
+            box-shadow: 0 10px 30px rgba(255, 107, 107, 0.3);
+        }
+
+        /* Decorative elements */
+        .decoration {
+            position: fixed;
+            font-size: 30px;
+            opacity: 0.1;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .decoration-1 {
+            top: 10%;
+            left: 5%;
+        }
+
+        .decoration-2 {
+            top: 60%;
+            right: 8%;
+        }
+
+        .decoration-3 {
+            bottom: 15%;
+            left: 15%;
+        }
+    </style>
+</head>
+<body>
+    <div class="decoration decoration-1">🌸</div>
+    <div class="decoration decoration-2">✨</div>
+    <div class="decoration decoration-3">🌿</div>
+
+    <div class="container">
+        <header>
+            <div class="logo">
+                <span>🌈</span> VibeAILife
+            </div>
+            <nav>
+                <a href="#">Dashboard</a>
+                <a href="#">Chat</a>
+                <a href="#">Vibe</a>
+                <a href="#">Goals</a>
+                <a href="#">Settings</a>
+            </nav>
+        </header>
+
+        <div class="welcome">
+            <h1>今天感觉怎么样？</h1>
+            <p>记录每一刻，发现更好的自己 ✨</p>
+        </div>
+
+        <div class="grid">
+            <!-- Fortune Card -->
+            <div class="card fortune-card">
+                <div class="card-title">
+                    <span class="icon">🎴</span>
+                    今日签文
+                </div>
+                <div class="fortune-display">
+                    <div class="fortune-badge">上上签</div>
+                    <div class="fortune-title">流水不争先</div>
+                    <div class="fortune-text">流水不争先，争的是滔滔不绝</div>
+                    <div class="fortune-interpretation">
+                        持续比速度更重要，坚持比爆发更可贵。不要急于一时的成就，保持稳定的前进姿态，你终将到达想去的地方。
+                    </div>
+                </div>
+                <button class="btn-fortune">✨ 重新抽签</button>
+            </div>
+
+            <!-- Vibe Tracker -->
+            <div class="card vibe-card">
+                <div class="card-title">
+                    <span class="icon">💝</span>
+                    记录 Vibe
+                </div>
+                <div class="mood-section">
+                    <div class="mood-label">心情如何？</div>
+                    <div class="mood-selector">
+                        <button class="mood-btn">😔</button>
+                        <button class="mood-btn">😐</button>
+                        <button class="mood-btn active">😊</button>
+                        <button class="mood-btn">😄</button>
+                        <button class="mood-btn">🥰</button>
+                    </div>
+                </div>
+                <div class="mood-section">
+                    <div class="mood-label">精力水平</div>
+                    <div class="mood-selector">
+                        <button class="mood-btn">💫</button>
+                        <button class="mood-btn">✨</button>
+                        <button class="mood-btn active">⚡</button>
+                        <button class="mood-btn">🔥</button>
+                        <button class="mood-btn">🚀</button>
+                    </div>
+                </div>
+                <div class="tags">
+                    <span class="tag">工作</span>
+                    <span class="tag active">学习</span>
+                    <span class="tag">运动</span>
+                    <span class="tag">休息</span>
+                    <span class="tag">社交</span>
+                    <span class="tag">创造</span>
+                </div>
+                <input type="text" class="note-input" placeholder="分享你当下的想法...">
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="card actions-card">
+                <div class="actions-grid">
+                    <div class="action-item">
+                        <div class="action-icon">💬</div>
+                        <div class="action-label">开始对话</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎴</div>
+                        <div class="action-label">每日签文</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">📊</div>
+                        <div class="action-label">记录 Vibe</div>
+                    </div>
+                    <div class="action-item">
+                        <div class="action-icon">🎯</div>
+                        <div class="action-label">我的目标</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="card goal-card">
+                <div class="card-title">
+                    <span class="icon">🎯</span>
+                    目标进度
+                </div>
+                <div class="goal-item">
+                    <div class="goal-title">每天运动30分钟</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 60%"></div>
+                        </div>
+                        <span class="progress-text">60%</span>
+                    </div>
+                </div>
+                <div class="goal-item">
+                    <div class="goal-title">阅读12本书</div>
+                    <div class="goal-progress">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 33%"></div>
+                        </div>
+                        <span class="progress-text">33%</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recommendations -->
+            <div class="card rec-card">
+                <div class="card-title">
+                    <span class="icon">💡</span>
+                    为你推荐
+                </div>
+                <div class="rec-item">
+                    <div class="rec-icon">🌱</div>
+                    <div class="rec-content">
+                        <h4>心情低落时的活动建议</h4>
+                        <p>试试这些活动：听喜欢的音乐、散步10分钟、和朋友聊天、或者写日记。记住，不好也没关系。</p>
+                    </div>
+                </div>
+                <div class="rec-item">
+                    <div class="rec-icon">💭</div>
+                    <div class="rec-content">
+                        <h4>恢复精力的冥想练习</h4>
+                        <p>尝试5分钟的深呼吸冥想，或者短暂的小睡。恢复精力是提升效率的关键。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="style-badge">Warm Organic</div>
+
+    <script>
+        // Mood selector interaction
+        document.querySelectorAll('.mood-selector').forEach((selector) => {
+            selector.querySelectorAll('.mood-btn').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    selector.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        });
+
+        // Tag interaction
+        document.querySelectorAll('.tag').forEach(tag => {
+            tag.addEventListener('click', () => {
+                tag.classList.toggle('active');
+            });
+        });
+
+        // Action items bounce effect
+        document.querySelectorAll('.action-item').forEach(item => {
+            item.addEventListener('click', function() {
+                this.style.transform = 'scale(0.95)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+
+        // Fortune button bounce
+        document.querySelector('.btn-fortune')?.addEventListener('click', function() {
+            this.style.transform = 'scale(0.95)';
+            setTimeout(() => {
+                this.style.transform = '';
+            }, 150);
+        });
+
+        // Add hover color variations to action items
+        const colors = ['var(--coral)', 'var(--sage)', 'var(--peach)', 'var(--lavender)'];
+        document.querySelectorAll('.action-item').forEach((item, index) => {
+            item.addEventListener('mouseenter', () => {
+                item.style.borderColor = colors[index];
+            });
+            item.addEventListener('mouseleave', () => {
+                item.style.borderColor = 'var(--sand)';
+            });
+        });
+    </script>
+</body>
+</html>
